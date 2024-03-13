@@ -1,23 +1,27 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import PostForm, sendEmail
+from django.views import View
 # Create your views here.
 
+class IndexClass(View):
+    def get(self,request):
+        return HttpResponse('Hello, world')
 
-def index(request):
-    return HttpResponse('Hello, world')
-def add_post(request):
-    a= PostForm()
-    return render(request, 'news/add_news.html',{'form': a}) 
 
-def save_news(request):
-    if request.method == 'POST':
-        g= PostForm(request.POST)
-        if g.is_valid():
-            g.save()
-            return HttpResponse('Thanh cong')
-        return HttpResponse('khong thanh cong')
-    return HttpResponse('khong phai post request')
+    
+
+class SaveNewsClass(View):
+    def get(self,request):
+        a= PostForm()
+        return render(request, 'news/add_news.html',{'form': a}) 
+    def post(self,request):
+            g= PostForm(request.POST)
+            if g.is_valid():
+                g.save()
+                return HttpResponse('Thanh cong')
+            return HttpResponse('khong thanh cong')
+    
 def email_view(request):
     b= sendEmail()
     return render(request,'news/email.html', {'f':b} )

@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth import authenticate,login,decorators
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import PostForm
 # Create your views here.
 
 from django.views import  View
@@ -28,3 +29,20 @@ class ViewUser(LoginRequiredMixin,View):
 @decorators.login_required(login_url='/login/log/')
 def view_product(request):
     return HttpResponse('Xem san pham')
+
+class Addpost(LoginRequiredMixin,View):
+    login_url='/login/log/'
+    def get(self,request):
+        f = PostForm
+        return render(request, 'login/add_post.html',{'form':f})
+    def post(self,request):
+        f= PostForm(request.POST)
+        
+        if not f.is_valid():
+            return HttpResponse('nhap sai du lieu')
+        print(request.user.get_all_permissions())
+        if not request.user.has_perm('login.add_post'):
+            f.save()
+            return HttpResponse('OK')
+        return HttpResponse('ban khong co quyen')
+        

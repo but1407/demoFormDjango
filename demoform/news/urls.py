@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+
 urlpatterns = [
     path("", views.IndexClass.as_view(), name='index' ),
     path("save/", views.SaveNewsClass.as_view(), name='save_post'),
